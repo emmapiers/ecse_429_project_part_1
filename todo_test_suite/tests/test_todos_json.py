@@ -438,7 +438,15 @@ def test_todos_endpoint_id_PUT_no_side_effects(save_initial_state, save_system_s
 
     assert updated_todo["doneStatus"] == todo_1()["doneStatus"]
 
-    assert len(current_state) == len(initial_state)+1
+    #Assert no other todos have been unexpectedly changed
+    new_todos = [todo for todo in current_state if todo not in initial_state]
+    assert len(new_todos) == 1
+    
+    unchanged_todos = [todo for todo in current_state if todo in initial_state]
+    assert len(unchanged_todos) == len(initial_state)
+    for initial_todo in initial_state:
+        assert initial_todo in unchanged_todos
+
 
 def test_todos_endpoint_POST_no_side_effects(save_initial_state, save_system_state):
     initial_state = save_initial_state
@@ -450,7 +458,7 @@ def test_todos_endpoint_POST_no_side_effects(save_initial_state, save_system_sta
     
     #Assert that one todo was added
     assert len(current_state) == len(initial_state) + 1
-    
+
     #Assert no other todos have been unexpectedly changed
     new_todos = [todo for todo in current_state if todo not in initial_state]
     assert len(new_todos) == 1
@@ -459,7 +467,7 @@ def test_todos_endpoint_POST_no_side_effects(save_initial_state, save_system_sta
     assert len(unchanged_todos) == len(initial_state)
     for initial_todo in initial_state:
         assert initial_todo in unchanged_todos
-
+    
 def test_todos_endpoint_DELETE_return_code(save_system_state, setup_todos):
      #An unsupported endpoint
      response = requests.delete(url)
