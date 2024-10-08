@@ -93,13 +93,13 @@ def save_initial_state(setup_todos):
     for todo in initial_state:
         requests.post(url, json=todo)
 
-def test_todos_endpoint_OPTIONS_return_code(save_system_state, setup_todos):
+def test_todos_endpoint_OPTIONS_return_code_passing(save_system_state, setup_todos):
     response = requests.options(url)
     
     #Actual return code but shouldn't be based on documentation
     assert response.status_code == 200
 
-def test_todos_id_endpoint_OPTIONS_return_code(save_system_state, setup_todos):
+def test_todos_id_endpoint_OPTIONS_return_code_passing(save_system_state, setup_todos):
     post_response = requests.post(url, json=todo_1())
     assert post_response.status_code == 201
 
@@ -111,7 +111,7 @@ def test_todos_id_endpoint_OPTIONS_return_code(save_system_state, setup_todos):
     #Actual return code but shouldn't be based on documentation
     assert response.status_code == 200
 
-def test_todos_endpoint_POST_invalid_input_type(save_system_state, setup_todos):
+def test_todos_endpoint_POST_invalid_input_type_passing(save_system_state, setup_todos):
     todo_invalid = {
         "doneStatus":False,
         "description":12, 
